@@ -89,6 +89,8 @@ int main(int argc, char **argv) {
     cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "nob.h");
     cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "flag.h");
     cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "ht.h");
+    cmd_append(&cmd, "-I", THIRDPARTY_FOLDER );
+    cmd_append(&cmd, "-I", ".");
     cmd_append(&cmd, "-Wno-unused-function");
     cmd_append(&cmd, "-Wno-unused-variable");
     cmd_append(&cmd, "-Wno-unused-parameter");

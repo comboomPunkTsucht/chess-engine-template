@@ -10,6 +10,7 @@
 #define SOURCE_FOLDER "src/"
 #define THIRDPARTY_FOLDER "thirdparty/"
 
+#define EXECUTABLE (BUILD_FOLDER "chess-engine")
 typedef struct {
     char **items;
     size_t count;
@@ -40,9 +41,13 @@ int main(int argc, char **argv) {
   for (int i = 0; i < argc; ++i) { da_append(&f_args, strdup(argv[i])); }
   NOB_GO_REBUILD_URSELF(argc, argv);
 
+  nob_set_log_handler(nob_cancer_log_handler);
+
   bool help = false;
   bool compile = false;
   bool debug = false;
+  char *debugger = "lldb";
+  bool   run = false;
   flag_bool_var(&help, "-help", false,
                 "Print this help to stdout and exit with 0");
   flag_bool_var(&help, "h", false, "Print this help to stdout and exit with 0");
@@ -51,6 +56,12 @@ int main(int argc, char **argv) {
 
   flag_bool_var(&debug, "-debug", false, "Build in debug mode");
   flag_bool_var(&debug, "d", false, "Build in debug mode");
+
+  flag_bool_var(&run, "-run", false, "Run the project");
+  flag_bool_var(&run, "r", false, "Run the project");
+
+  flag_str_var(&debugger, "-debugger", "lldb", "The debugger to use");
+
 
   if (f_args.count == 1) {
     usage(stderr);
@@ -81,13 +92,20 @@ int main(int argc, char **argv) {
     cmd_append(&cmd, "-Wno-unused-function");
     cmd_append(&cmd, "-Wno-unused-variable");
     cmd_append(&cmd, "-Wno-unused-parameter");
+    cmd_append(&cmd, "-Wno-missing-field-initializers");
+    cmd_append(&cmd, "-Wno-unused-value");
+    cmd_append(&cmd, "-Wno-writable-strings");
 
-    cmd_append(&cmd, "-o", BUILD_FOLDER "main", SOURCE_FOLDER "main.cpp");
+    cmd_append(&cmd, "-o", EXECUTABLE, SOURCE_FOLDER "main.cpp");
     if (!cmd_run(&cmd)) return 1;
   }
 
   if (debug) {
-    cmd_append(&cmd, "lldb", BUILD_FOLDER "main");
+    cmd_append(&cmd, debugger);
+  }
+
+   if (run) {
+    cmd_append(&cmd, EXECUTABLE);
     if (!cmd_run(&cmd)) return 1;
   }
   return 0;

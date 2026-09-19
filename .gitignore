@@ -39,6 +39,10 @@
 *.out
 *.app
 
+nob
+nob.old
+
+!tools/
 # Build directories
 build/
 Build/

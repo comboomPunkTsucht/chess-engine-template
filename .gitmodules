@@ -1,0 +1,9 @@
+[submodule "thirdparty/nob.h"]
+	path = thirdparty/nob.h
+	url = https://github.com/tsoding/nob.h.git
+[submodule "thirdparty/flag.h"]
+	path = thirdparty/flag.h
+	url = https://github.com/tsoding/flag.h.git
+[submodule "thirdparty/ht.h"]
+	path = thirdparty/ht.h
+	url = https://github.com/tsoding/ht.h.git

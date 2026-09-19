@@ -15,7 +15,6 @@ int main(int argc, char **argv) {
   nob_set_log_handler(nob_cancer_log_handler);
   UNUSED(argc);
   UNUSED(argv);
-  breakpoint();
   nob_log(INFO, "Hello, World!");
   return 0;
 }

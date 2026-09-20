@@ -85,6 +85,12 @@ int main(int argc, char **argv) {
   if (compile) {
     if (!mkdir_if_not_exists(BUILD_FOLDER)) return 1;
     clangpp(&cmd);
+    cmd_append(&cmd, SOURCE_FOLDER "main.cpp");
+    if (debug) {
+      cmd_append(&cmd, "-g");
+    } else {
+      cmd_append(&cmd, "-O3");
+    }
     clangpp_flags(&cmd);
     cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "nob.h");
     cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "flag.h");
@@ -98,7 +104,7 @@ int main(int argc, char **argv) {
     cmd_append(&cmd, "-Wno-unused-value");
     cmd_append(&cmd, "-Wno-writable-strings");
 
-    cmd_append(&cmd, "-o", EXECUTABLE, SOURCE_FOLDER "main.cpp");
+    cmd_append(&cmd, "-o", EXECUTABLE);
     if (!cmd_run(&cmd)) return 1;
   }
 

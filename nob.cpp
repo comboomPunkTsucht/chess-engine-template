@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
   bool  help = false;
   bool  compile = false;
   bool  debug = false;
-  char *debugger = "lldb";
+  char *debugger = (char *)"lldb";
   bool  run = false;
   flag_bool_var(&help, "-help", false,
                 "Print this help to stdout and exit with 0");

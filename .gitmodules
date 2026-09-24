@@ -1,9 +1,12 @@
 [submodule "thirdparty/nob.h"]
 	path = thirdparty/nob.h
 	url = https://github.com/tsoding/nob.h.git
+	ignore = dirty
 [submodule "thirdparty/flag.h"]
 	path = thirdparty/flag.h
 	url = https://github.com/tsoding/flag.h.git
+	ignore = dirty
 [submodule "thirdparty/ht.h"]
 	path = thirdparty/ht.h
 	url = https://github.com/tsoding/ht.h.git
+	ignore = dirty

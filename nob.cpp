@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define NOB_IMPLEMENTATION
-#include "nob.h"
 #include "nob_addons.h"
 #define FLAG_IMPLEMENTATION
 #include "flag.h"
@@ -9,16 +8,17 @@
 #define BUILD_FOLDER "build/"
 #define SOURCE_FOLDER "src/"
 #define THIRDPARTY_FOLDER "thirdparty/"
+#define THIRDPARTY_INCLUDE_FOLDER THIRDPARTY_FOLDER "include/"
 
-#define EXECUTABLE (BUILD_FOLDER "chess-engine")
+#define EXECUTABLE BUILD_FOLDER "chess-engine"
+
+Cmd cmd = {0};
 typedef struct {
     char **items;
     size_t count;
     size_t capacity;
 
 } F_Args;
-
-
 
 void usage(FILE *stream) {
   fprintf(stream, "Usage: ./nob [OPTIONS]\n");
@@ -36,18 +36,17 @@ void print_list(const char **items, size_t count) {
 }
 
 int main(int argc, char **argv) {
+  addon_init_logging();
   F_Args f_args = {0};
-  Cmd cmd = {0};
+
   for (int i = 0; i < argc; ++i) { da_append(&f_args, strdup(argv[i])); }
   NOB_GO_REBUILD_URSELF(argc, argv);
 
-  nob_set_log_handler(nob_cancer_log_handler);
-
-  bool help = false;
-  bool compile = false;
-  bool debug = false;
+  bool  help = false;
+  bool  compile = false;
+  bool  debug = false;
   char *debugger = "lldb";
-  bool   run = false;
+  bool  run = false;
   flag_bool_var(&help, "-help", false,
                 "Print this help to stdout and exit with 0");
   flag_bool_var(&help, "h", false, "Print this help to stdout and exit with 0");
@@ -61,7 +60,6 @@ int main(int argc, char **argv) {
   flag_bool_var(&run, "r", false, "Run the project");
 
   flag_str_var(&debugger, "-debugger", "lldb", "The debugger to use");
-
 
   if (f_args.count == 1) {
     usage(stderr);
@@ -83,7 +81,7 @@ int main(int argc, char **argv) {
   }
 
   if (compile) {
-    if (!mkdir_if_not_exists(BUILD_FOLDER)) return 1;
+    if (!mkdir_if_not_exists(BUILD_FOLDER)) { return 1; }
     clangpp(&cmd);
     cmd_append(&cmd, SOURCE_FOLDER "main.cpp");
     if (debug) {
@@ -92,10 +90,7 @@ int main(int argc, char **argv) {
       cmd_append(&cmd, "-O3");
     }
     clangpp_flags(&cmd);
-    cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "nob.h");
-    cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "flag.h");
-    cmd_append(&cmd, "-I", THIRDPARTY_FOLDER "ht.h");
-    cmd_append(&cmd, "-I", THIRDPARTY_FOLDER );
+    cmd_append(&cmd, "-I", THIRDPARTY_INCLUDE_FOLDER);
     cmd_append(&cmd, "-I", ".");
     cmd_append(&cmd, "-Wno-unused-function");
     cmd_append(&cmd, "-Wno-unused-variable");
@@ -105,16 +100,14 @@ int main(int argc, char **argv) {
     cmd_append(&cmd, "-Wno-writable-strings");
 
     cmd_append(&cmd, "-o", EXECUTABLE);
-    if (!cmd_run(&cmd)) return 1;
+    if (!cmd_run(&cmd)) { return 1; }
   }
 
-  if (debug) {
-    cmd_append(&cmd, debugger);
-  }
+  if (debug) { cmd_append(&cmd, debugger); }
 
-   if (run) {
+  if (run) {
     cmd_append(&cmd, EXECUTABLE);
-    if (!cmd_run(&cmd)) return 1;
+    if (!cmd_run(&cmd)) { return 1; }
   }
   return 0;
 }

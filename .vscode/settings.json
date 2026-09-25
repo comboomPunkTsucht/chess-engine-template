@@ -38,7 +38,7 @@
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [],
-  "C_Cpp_Runner.includeSearch": ["../src/", "../thirdparty/include/", "../"],
+  "C_Cpp_Runner.includeSearch": ["src/", "thirdparty/include/", "."],
   "C_Cpp_Runner.excludeSearch": [
     "**/build",
     "**/build/**",
@@ -53,10 +53,15 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
-  "c-cpp-flylint.clang.includePaths": [
-    "../src/",
-    "../thirdparty/include/",
-    "../"
-  ],
-  "cmake.ignoreCMakeListsMissing": true
+  "c-cpp-flylint.clang.includePaths": ["src/", "thirdparty/include/", "."],
+  "cmake.ignoreCMakeListsMissing": true,
+  "C_Cpp.default.cppStandard": "c++26",
+  "C_Cpp.default.cStandard": "c99",
+  "C_Cpp.default.browse.path": [".", "src", "thirdparty/include"],
+  "C_Cpp.default.recursiveIncludes.order": "breadthFirst",
+  "C_Cpp.default.recursiveIncludes.priority": "afterSystemIncludes",
+  "C_Cpp.default.recursiveIncludes.reduce": "default",
+  "C_Cpp.formatting": "clangFormat",
+  "C_Cpp.doxygen.generatedStyle": "/**",
+  "C_Cpp.autoAddFileAssociations": true
 }

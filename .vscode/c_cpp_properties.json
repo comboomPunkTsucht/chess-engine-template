@@ -5,8 +5,7 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/thirdparty/include",
-        "${workspaceFolder}/src",
-        "${workspaceFolder}/tools"
+        "${workspaceFolder}/src"
       ],
       "defines": [
         "RAYGUI_IMPLEMENTATION",
@@ -26,8 +25,7 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/thirdparty/include",
-        "${workspaceFolder}/src",
-        "${workspaceFolder}/tools"
+        "${workspaceFolder}/src"
       ],
       "defines": [
         "RAYGUI_IMPLEMENTATION",
@@ -47,8 +45,7 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/thirdparty/include",
-        "${workspaceFolder}/src",
-        "${workspaceFolder}/tools"
+        "${workspaceFolder}/src"
       ],
       "defines": [
         "RAYGUI_IMPLEMENTATION",
@@ -67,8 +64,7 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/thirdparty/include",
-        "${workspaceFolder}/src",
-        "${workspaceFolder}/tools"
+        "${workspaceFolder}/src"
       ],
       "defines": [
         "RAYGUI_IMPLEMENTATION",
@@ -87,8 +83,7 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/thirdparty/include",
-        "${workspaceFolder}/src",
-        "${workspaceFolder}/tools"
+        "${workspaceFolder}/src"
       ],
       "defines": [
         "RAYGUI_IMPLEMENTATION",
@@ -108,8 +103,7 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/thirdparty/include",
-        "${workspaceFolder}/src",
-        "${workspaceFolder}/tools"
+        "${workspaceFolder}/src"
       ],
       "defines": [
         "RAYGUI_IMPLEMENTATION",

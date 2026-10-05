@@ -13,7 +13,9 @@
 
 #define EXECUTABLE BUILD_FOLDER "chess-engine"
 
-Cmd cmd = {0};
+Cmd         cmd = {0};
+
+const char *cwd = get_current_dir_temp();
 typedef struct {
     char **items;
     size_t count;
@@ -34,6 +36,26 @@ void print_list(const char **items, size_t count) {
     printf("%s", items[i]);
   }
   printf("]\n");
+}
+
+bool build_ixwebsocket(bool debug) {
+  if (!mkdir_if_not_exists(BUILD_FOLDER "ixwebsocket")) { return false; }
+  cmd_append(&cmd, "cmake");
+  cmd_append(&cmd, "-DUSE_TLS=1");
+  cmd_append(&cmd, "-DUSE_OPEN_SSL=1");
+  cmd_append(&cmd, "-DUSE_ZLIB = 1");
+  cmd_append(&cmd, "--install-prefix",
+             temp_sprintf("%s%s", cwd, BUILD_FOLDER "ixwebsocket"));
+  cmd_append(&cmd, "-B", BUILD_FOLDER "ixwebsocket");
+  cmd_append(&cmd, "-S", THIRDPARTY_FOLDER "IXWebSocket");
+
+  if (!cmd_run(&cmd)) { return false; }
+
+  cmd_append(&cmd, "make");
+  cmd_append(&cmd, "-C", BUILD_FOLDER "ixwebsocket");
+  if (!cmd_run(&cmd)) { return false; }
+
+  return true;
 }
 
 int main(int argc, char **argv) {
@@ -83,28 +105,63 @@ int main(int argc, char **argv) {
 
   if (compile) {
     if (!mkdir_if_not_exists(BUILD_FOLDER)) { return 1; }
+    if (!build_ixwebsocket(debug)) { return 1; }
     clangpp(&cmd);
     cmd_append(&cmd, SOURCE_FOLDER "main.cpp");
     if (debug) {
       cmd_append(&cmd, "-g");
+      // NEU: Zwingt Clang, die .o Datei zu behalten, damit dsymutil sie lesen
+      // kann
+      cmd_append(&cmd, "-save-temps=obj");
+      // NEU: Legt die .o Datei sauber im "build/"-Ordner ab anstatt im
+      // Hauptverzeichnis
+      cmd_append(&cmd, "-dumpdir", BUILD_FOLDER);
     } else {
       cmd_append(&cmd, "-O3");
     }
     clangpp_flags(&cmd);
     cmd_append(&cmd, "-I", THIRDPARTY_INCLUDE_FOLDER);
+    cmd_append(&cmd, "-I", SOURCE_FOLDER);
+    cmd_append(&cmd, "-I", BUILD_FOLDER "assets");
     cmd_append(&cmd, "-I", ".");
+    cmd_append(&cmd, "-L", BUILD_FOLDER "ixwebsocket");
+    cmd_append(&cmd, "-lixwebsocket");
+    cmd_append(&cmd, "-lm");
+    cmd_append(&cmd, "-lz");
+
+#ifdef __APPLE__
+
+    cmd_append(&cmd, "-mmacos-version-min=26.0");
+
+    cmd_append(&cmd, "-framework", "Security");
+    cmd_append(&cmd, "-framework", "Foundation");
+#elif defined(__linux__)
+    cmd_append(&cmd, "-lssl");
+    cmd_append(&cmd, "-lcrypto");
+// linux specific flags can be added here
+#elif defined(_WIN32)
+    cmd_append(&cmd, "-lssl");
+    cmd_append(&cmd, "-lcrypto");
+// windows specific flags can be added here
+//----------------------------------
+// more platforms can be added here
+#endif
+
     cmd_append(&cmd, "-Wno-unused-function");
     cmd_append(&cmd, "-Wno-unused-variable");
     cmd_append(&cmd, "-Wno-unused-parameter");
     cmd_append(&cmd, "-Wno-missing-field-initializers");
     cmd_append(&cmd, "-Wno-unused-value");
     cmd_append(&cmd, "-Wno-writable-strings");
+    cmd_append(&cmd, "-Wno-unused-command-line-argument");
+
+    cmd_append(&cmd, "-static-libclosure", "-static-libsan", "-static-openmp");
 
     cmd_append(&cmd, "-o", EXECUTABLE);
     if (!cmd_run(&cmd)) { return 1; }
   }
 
-  if (debug) { cmd_append(&cmd, debugger); }
+  if (debug && run) { cmd_append(&cmd, debugger); }
 
   if (run) {
     cmd_append(&cmd, EXECUTABLE);

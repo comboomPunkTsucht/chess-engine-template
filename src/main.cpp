@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// NEU: IXWebSocket Includes
+#include <ixwebsocket/IXNetSystem.h>
+#include <ixwebsocket/IXUserAgent.h>
+#include <ixwebsocket/IXWebSocket.h>
+
 #define NOB_IMPLEMENTATION
 #include "nob_addons.h"
 
